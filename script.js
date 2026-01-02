@@ -4,25 +4,25 @@ function createEpisodeCard(episode) {
   const episodeCard = document
     .getElementById("episode-card")
     .content.cloneNode(true);
-  episodeCard.querySelector("h3").textContent = episode.name;
-  episodeCard.querySelector("p").textContent = episode.season;
-  episodeCard.querySelector("[data-number]").textContent = episode.number;
-  episodeCard.querySelector("[data-summary]").textContent = episode.summary;
 
-
+  const episodeCode = `S${String(episode.season).padStart(2, "0")}E${String(episode.number).padStart(2, "0")}`;
+  const titleEl = episodeCard.querySelector("[data-name]");
+  titleEl.textContent = `${episode.name} - ${episodeCode}`; 
+  episodeCard.querySelector("[data-summary]").textContent = episode.summary.replace(/<\/?p>/gi, "");
+  const img = episodeCard.querySelector("[data-image]");
+  img.src = episode.image.medium;
+  img.alt = episode.name;
+  
   return episodeCard;
 }
 
-document.body.append(createEpisodeCard(allEpisodes));
+const container = document.getElementById("episodes-container");
 
-const episodeCards = [];
+
 for (const episode of allEpisodes) {
   const card = createEpisodeCard(episode);
-  document.body.appendChild(card);
-  episodeCards.push(card);
+  container.appendChild(card);
 }
-
-document.body.append(...episodeCards);
 
 
 window.onload = setup;
