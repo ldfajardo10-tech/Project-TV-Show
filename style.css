@@ -1,3 +1,47 @@
-#root {
-  color: red;
+#episodes-container {
+  color: black;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;             
+  padding: 20px;
+}
+
+.episode-card {
+  background-color: #f8f8f8;  
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;.episode-card {
+  background-color: #f8f8f8;   
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s;
+  cursor: pointer;
+
+  
+  aspect-ratio: 1 / 1;
+}
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.episode-card h3 {
+  display: grid;
+  grid-template-columns: auto 1fr; 
+  gap: 5px;
+  width: 100%;
+  padding: 5px;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  justify-items: center;
+  align-items: center;   
+  text-align: center;
 }
