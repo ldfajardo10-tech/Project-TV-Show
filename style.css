@@ -45,3 +45,16 @@
   align-items: center;   
   text-align: center;
 }
+
+#site-footer {
+  width: 100%;
+  background-color: #f8f8f8;   /* light, subtle background */
+  color: #555;                 /* gray text */
+  text-align: left;            /* left-aligned text */
+  padding: 10px 20px;          /* small padding */
+  font-size: 0.85rem;          /* smaller text */
+  border-top: 0.5px solid #ddd;  /* subtle top border */
+  box-sizing: border-box;
+}
+
+
