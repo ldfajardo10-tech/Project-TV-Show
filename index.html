@@ -7,9 +7,7 @@
     <link href="style.css" rel="stylesheet" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   </head>
-
-  <body>
-    
+  <body>   
       <template id="episode-card">
         <section class="episode-card">        
           <img data-image>
@@ -17,13 +15,15 @@
           <p data-summary></p> 
         </section>
       </template>
+      <label>
+        <input type="search" id="q" name="q" placeholder="Search Episode" /> 🔍
+      </label>
     <div id="episodes-container"></div>
     <footer id="site-footer">
       <p>Data provided by <a href="http://www.tvmaze.com/" target="_blank">TVmaze</a></p>
     </footer>
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
     <script src="episodes.js"></script>
-
     <!-- Loads YOUR javascript code -->
     <script src="script.js"></script>
   </body>
