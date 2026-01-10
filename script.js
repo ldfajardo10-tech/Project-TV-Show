@@ -1,9 +1,41 @@
-const allEpisodes = getAllEpisodes ; //we get the data from all episodes
-const state = {                          //we created a const state with an object with our episodes and with an empty string value to storage the user input.
-  valuesFromFunction : getAllEpisodes(),
+const state = {    //we created a const state with an object with our episodes and with an empty string value to storage the user input.
+  episodes : [],
   
-  searchTerm : ""
+  searchTerm : "",
+
+  loading : true, // we create properties to charge different messages on the UI.
+
+  error : null
 };
+
+
+const endpoint = "https://api.tvmaze.com/shows/82/episodes";
+
+const fetchEpisodes = async () => {  
+  try {                                           
+    const response = await fetch(endpoint);
+    if (!response.ok) {
+      throw new Error("error fetching episodes");
+    }
+    return await response.json(); // if the async function returns the response, show the data, if not, throw an error.
+  } catch (error) {
+    state.error = error.message;  
+    return null;
+
+  }
+};
+
+fetchEpisodes().then(function (episodes) {
+  state.loading = false;                    // once the episodes have charged, stop the loading message
+
+  if (episodes) {              
+    state.episodes = episodes;
+  }
+
+  render(); //render after the fetching data finishes
+  
+});
+
 
 function createEpisodeCard(episode) { 
   const episodeCard = document      // we created a const to clone the template from the html file
@@ -19,12 +51,25 @@ function createEpisodeCard(episode) {
   img.alt = episode.name;
   
   return episodeCard;
-}
+};
 
 function render() {
   // with this function we render the website each time we do a search
 
-  const filteredEpisodes = state.valuesFromFunction.filter(function (episode) {
+  const container = document.getElementById("episodes-container"); // created to load the messages in case the data is still not there.
+  container.innerHTML = "";
+
+  if (state.loading) {    // rendering loading message for the user
+    container.textContent = "loading episodes...";
+    return;
+  }
+
+  if (state.error) { //rendering error message for the user
+    container.textContent = `Error: ${state.error}`;
+    return;
+  }
+
+  const filteredEpisodes = state.episodes.filter(function (episode) {
     //we filter all the data making sure the input is a string and case insensitive
     return (
       String(episode.name).toLowerCase().includes(state.searchTerm) ||
@@ -36,15 +81,14 @@ function render() {
   document.getElementById("episodes-container").append(...episodeCards);
 };
 
-render(); //render the website with the new DOM elements
 
 const input = document.querySelector("input"); //select the input tag and stores it in the variable input
 input.addEventListener("input", function () { //fires every time the input changes (typing, pasting, deleting text)
   state.searchTerm = input.value.toLowerCase(); //stores the input value with case-insensitive in the state.searchTerm 
 
   document.getElementById("episodes-container").innerHTML = ""; //clear the previous list of episodes and render then creates and append the matching episodes
-  render();
+  render(); // render after the user input changes
 });
 
 
-window.onload = setup;
+
