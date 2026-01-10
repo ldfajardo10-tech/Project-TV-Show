@@ -15,15 +15,25 @@
           <p data-summary></p> 
         </section>
       </template>
+      <template id="show-card">
+        <section class="show-card">        
+          <img data-image>
+          <h3 data-name></h3>
+          <p data-summary></p> 
+          <h2 data-rating>Rated:</h2>
+          <h2 data-genres>Genres:</h2>
+          <h2 data-status>Status:</h2>
+          <h2 data-runtime>Runtime:</h2>
+        </section>
+      </template>
       <label>
         <input type="search" id="q" name="q" placeholder="Search Episode" /> 🔍
       </label>
+    <div id="shows-container"></div>
     <div id="episodes-container"></div>
     <footer id="site-footer">
       <p>Data provided by <a href="http://www.tvmaze.com/" target="_blank">TVmaze</a></p>
-    </footer>
-    <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-    <script src="episodes.js"></script>
+    </footer> 
     <!-- Loads YOUR javascript code -->
     <script src="script.js"></script>
   </body>

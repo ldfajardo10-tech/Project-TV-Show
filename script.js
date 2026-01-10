@@ -1,40 +1,83 @@
-const state = {    //we created a const state with an object with our episodes and with an empty string value to storage the user input.
-  episodes : [],
-  
-  searchTerm : "",
+const state = {
+  shows: [],   //storage the shows
 
-  loading : true, // we create properties to charge different messages on the UI.
+  episodes: [], //storage the episodes
 
-  error : null
+  searchTerm: "",
+
+  showsError: null, // we create properties to charge different messages on the UI.
+
+  episodesLoading: true,
+
+  episodesError: null,
 };
 
 
-const endpoint = "https://api.tvmaze.com/shows/82/episodes";
+const endpoint = "https://api.tvmaze.com/shows";
 
-const fetchEpisodes = async () => {  
-  try {                                           
+const fetchShows = async () => {
+  try {
     const response = await fetch(endpoint);
+    if (!response.ok) {
+      throw new Error("error fetching shows");
+    }
+    return await response.json();
+  } catch (error) {
+      state.showsError = error.message;
+      return [];
+  }
+}
+
+fetchShows().then(function (shows) {
+  state.shows = shows;
+  renderShows();
+});
+
+const fetchEpisodes = async (showId) => { 
+  
+  state.episodesLoading = true;
+  state.episodesError = null;
+  renderEpisodes();
+
+  try {                                           
+    const response = await fetch(`https://api.tvmaze.com/shows/${showId}/episodes`);
     if (!response.ok) {
       throw new Error("error fetching episodes");
     }
     return await response.json(); // if the async function returns the response, show the data, if not, throw an error.
   } catch (error) {
-    state.error = error.message;  
-    return null;
+      state.episodesError = error.message;  
+      return [];
 
   }
 };
 
-fetchEpisodes().then(function (episodes) {
-  state.loading = false;                    // once the episodes have charged, stop the loading message
 
-  if (episodes) {              
-    state.episodes = episodes;
-  }
+function createShowCard(show) { 
+  const showCard = document      
+    .getElementById("show-card")
+    .content.cloneNode(true);
 
-  render(); //render after the fetching data finishes
-  
-});
+  showCard.querySelector("[data-name]").textContent = show.name; 
+  showCard.querySelector("[data-summary]").textContent = show.summary.replace((/<[^>]*>/g, "")); //using replace method and regex to eliminate the <p> tags from the summary
+  const img = showCard.querySelector("[data-image]");
+  img.src = show.image.medium;
+  img.alt = show.name;
+  showCard.querySelector("[data-rating]").textContent = show.rating.average;
+  showCard.querySelector("[data-genres]").textContent = show.genres.join(", ");
+  showCard.querySelector("[data-status]").textContent = show.status;
+  showCard.querySelector("[data-runtime]").textContent = show.runtime;
+
+  showCard.querySelector(".show-card").addEventListener("click", function () {
+    state.selectedShowId = show.id;
+    
+    document.querySelector("input").value = "";
+    state.searchTerm = "";
+
+    fetchEpisodes(show.id);
+  });
+  return showCard;
+};
 
 
 function createEpisodeCard(episode) { 
@@ -53,19 +96,41 @@ function createEpisodeCard(episode) {
   return episodeCard;
 };
 
-function render() {
+function renderShows() {
+  const container = document.getElementById("shows-container");
+  container.innerHTML = "";
+
+  if (state.showsError) {
+    //rendering error message for the user
+    container.textContent = `Error: ${state.showsError}`;
+    return;
+  }
+
+  const filteredShows = state.shows.filter(function (show) {
+      //we filter all the data making sure the input is a string and case insensitive
+    return (
+      String(show.name).toLowerCase().includes(state.searchTerm) ||
+      String(show.summary).toLowerCase().includes(state.searchTerm)
+    );
+  });
+
+  const showCards = filteredShows.map(createShowCard);
+  container.append(...showCards);
+}
+
+function renderEpisodes() {
   // with this function we render the website each time we do a search
 
   const container = document.getElementById("episodes-container"); // created to load the messages in case the data is still not there.
   container.innerHTML = "";
 
-  if (state.loading) {    // rendering loading message for the user
+  if (state.episodesLoading) {    // rendering loading message for the user
     container.textContent = "loading episodes...";
     return;
   }
 
-  if (state.error) { //rendering error message for the user
-    container.textContent = `Error: ${state.error}`;
+  if (state.episodesError) { //rendering error message for the user
+    container.textContent = `Error: ${state.episodesError}`;
     return;
   }
 
@@ -86,8 +151,15 @@ const input = document.querySelector("input"); //select the input tag and stores
 input.addEventListener("input", function () { //fires every time the input changes (typing, pasting, deleting text)
   state.searchTerm = input.value.toLowerCase(); //stores the input value with case-insensitive in the state.searchTerm 
 
-  document.getElementById("episodes-container").innerHTML = ""; //clear the previous list of episodes and render then creates and append the matching episodes
-  render(); // render after the user input changes
+  if (!state.selectedShowId) {
+  const showsContainer = document.getElementById("shows-container")
+  showsContainer.innerHTML = "";
+  renderShows();
+  } else {
+  const episodesContainer = document.getElementById("episodes-container")
+  episodesContainer.innerHTML = ""; //clear the previous list of episodes and render then creates and append the matching episodes
+  renderEpisodes(); // render after the user input changes
+  }
 });
 
 
