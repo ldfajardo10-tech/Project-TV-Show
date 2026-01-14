@@ -7,42 +7,55 @@
     <link href="style.css" rel="stylesheet" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   </head>
-  <body>   
-      <template id="episode-card">
-        <section class="episode-card">        
-          <img data-image>
-          <h3 data-name></h3>
-          <p data-summary></p> 
-        </section>
-      </template>
-      <template id="show-card">
-        <section class="show-card">        
-          <img data-image>
-          <h3 data-name></h3>
-          <p data-summary></p> 
-          <h2 data-rating>Rated:</h2>
-          <h2 data-genres>Genres:</h2>
-          <h2 data-status>Status:</h2>
-          <h2 data-runtime>Runtime:</h2>
-        </section>
-      </template>
+  <body> 
+    
+    <template id="episode-card">
+      <section class="episode-card">        
+        <img data-image>
+        <h3 data-name></h3>
+        <p data-summary></p> 
+      </section>
+    </template>
+
+    <template id="show-card">
+      <section class="show-card">        
+        <img data-image>
+        <div class="card-content-wrapper">
+          <h3 data-name></h3> <div class="show-info">
+            <p data-summary></p> <div class="meta-container"> <h2 class="meta-item"><strong>Rated:</strong> <span data-rating></span></h2>
+              <h2 class="meta-item"><strong>Genres:</strong> <span data-genres></span></h2> 
+              <h2 class="meta-item"><strong>Status:</strong> <span data-status></span></h2>
+              <h2 class="meta-item"><strong>Runtime:</strong> <span data-runtime></span> mins</h2>
+            </div>
+          </div>
+        </div>
+      </section>
+    </template>
+
+    <header id="controls">
+      <button id="back-to-shows" class="hidden">⬅ Back to All Shows</button>
       <label for="show-select">Select a Show:</label>
-        <select id="show-select">
-          <option value="">--Choose a show--</option>
-        </select>
+      <select id="show-select">
+        <option value="">--Choose a show--</option>
+      </select>
+
       <label for="episode-select">Select an Episode:</label>
-        <select id="episode-select">
-          <option value="">--Choose an episode--</option>
-        </select>
+      <select id="episode-select">
+        <option value="">--Choose an episode--</option>
+      </select>
+
       <label>
         <input type="search" id="q" name="q" placeholder="Search" /> 🔍
       </label>
+    </header>
+
     <div id="shows-container"></div>
     <div id="episodes-container"></div>
+
     <footer id="site-footer">
       <p>Data provided by <a href="http://www.tvmaze.com/" target="_blank">TVmaze</a></p>
     </footer> 
-    <!-- Loads YOUR javascript code -->
+
     <script src="script.js"></script>
   </body>
 </html>

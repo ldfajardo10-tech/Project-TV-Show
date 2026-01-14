@@ -1,3 +1,19 @@
+/* --- Global & Container Styles --- */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+#shows-container {
+  display: flex;
+  flex-direction: column; 
+  gap: 20px;              
+  padding: 20px;
+  max-width: 1100px;      
+  margin: 0 auto;
+}
+
 #episodes-container {
   color: black;
   display: grid;
@@ -6,55 +22,199 @@
   padding: 20px;
 }
 
+/* --- Show Card Styles (The Horizontal Layout) --- */
+.show-card {
+  display: flex;          
+  flex-direction: row;    
+  align-items: stretch;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;       
+  height: 280px;          /* Adjusted height for better fit */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.show-card img {
+  width: 200px;           
+  height: 100%;           
+  object-fit: cover;      
+}
+
+/* Wrapper to stack Title on top of the Row below */
+.card-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.show-card h3 {
+  margin: 15px 20px 5px 20px;
+  font-size: 1.5rem;
+  color: #111;
+}
+
+/* The row containing Summary (Left) and Meta (Right) */
+.show-info {
+  display: flex;
+  flex-direction: row; 
+  flex-grow: 1;
+  padding: 10px 20px 20px 20px;
+  gap: 20px;
+  overflow: hidden;
+}
+
+.show-card p {
+  flex: 2;                /* Takes up more space */
+  font-size: 0.95rem;
+  line-height: 1.5;
+  overflow-y: auto;       
+  margin: 0;
+}
+
+/* Meta Container styling */
+.meta-container {
+  flex: 1;                /* Takes up less space */
+  display: flex;
+  flex-direction: column; 
+  justify-content: flex-start;
+  border-left: 1px solid #eee; 
+  padding-left: 20px;
+  min-width: 200px;
+}
+
+.meta-item {
+  display: block;         
+  font-size: 0.85rem;
+  margin-bottom: 8px;              
+  color: #444;
+}
+
+.meta-item strong {
+  color: #000;
+  display: inline-block;
+  width: 75px;            
+}
+
+/* --- Episode Card Styles (The Grid Layout) --- */
 .episode-card {
   background-color: #f8f8f8;  
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   display: flex;
-  flex-direction: column;.episode-card {
-  background-color: #f8f8f8;   
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
-  display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   transition: transform 0.2s;
   cursor: pointer;
-
-  
-  aspect-ratio: 1 / 1;
 }
-  align-items: center;
-  text-align: center;
-  transition: transform 0.2s;
-  cursor: pointer;
+
+.episode-card:hover {
+  transform: translateY(-5px);
+}
+
+.episode-card img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 }
 
 .episode-card h3 {
-  display: grid;
-  grid-template-columns: auto 1fr; 
-  gap: 5px;
+  display: flex;
+  justify-content: center;
   width: 100%;
-  padding: 5px;
+  padding: 10px;
+  margin: 0;
+  font-size: 1rem;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
-  justify-items: center;
-  align-items: center;   
-  text-align: center;
 }
 
+/* --- Footer --- */
 #site-footer {
   width: 100%;
-  background-color: #f8f8f8;   /* light, subtle background */
-  color: #555;                 /* gray text */
-  text-align: left;            /* left-aligned text */
-  padding: 10px 20px;          /* small padding */
-  font-size: 0.85rem;          /* smaller text */
-  border-top: 0.5px solid #ddd;  /* subtle top border */
+  background-color: #f8f8f8;
+  color: #555;
+  text-align: left;
+  padding: 15px 20px;
+  font-size: 0.85rem;
+  border-top: 1px solid #ddd;
   box-sizing: border-box;
+  margin-top: 40px;
+}
+
+/* --- Navigation & Controls --- */
+#controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+#controls label {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Style for both Selects and the Search Input */
+#show-select, 
+#episode-select, 
+#q {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background-color: white;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  outline: none;
+}
+
+/* Focus states for better accessibility */
+#show-select:focus, 
+#episode-select:focus, 
+#q:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+#q {
+  width: 250px;
 }
 
 
+.search-container {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding-right: 10px;
+}
+
+.search-container #q {
+  border: none; 
+}
+
+
+#back-to-shows {
+  padding: 8px 16px;
+  background-color: #4b5563; 
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+  margin-right: 10px;
+}
