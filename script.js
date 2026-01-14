@@ -18,6 +18,9 @@ const state = {
 const input = document.querySelector("input");
 const showDropdown = document.getElementById("show-select");
 const episodeDropdown = document.getElementById("episode-select");
+const backToShows = document.getElementById("back-to-shows");
+
+
 
 function stripHTML(html) {        //function to delete the tags in the summary
 
@@ -58,14 +61,19 @@ function createShowCard(show) {
 
   showCard.querySelector("[data-name]").textContent = show.name;
   showCard.querySelector("[data-summary]").textContent = stripHTML(show.summary);
+  
   const img = showCard.querySelector("[data-image]");
-  img.src = show.image?.medium || "";
-  img.alt = show.name;
-  showCard.querySelector("[data-rating]").textContent =
-    show.rating?.average || "N/A";
-  showCard.querySelector("[data-genres]").textContent = show.genres.join(", ");
-  showCard.querySelector("[data-status]").textContent = show.status;
-  showCard.querySelector("[data-runtime]").textContent = show.runtime;
+  const placeholder = "https://via.placeholder.com/210x295?text=No+Image+Available";
+  img.src = show.image?.medium || placeholder;
+  img.alt = show.name || "show poster";
+ 
+  showCard.querySelector("[data-rating]").textContent = show.rating?.average || "N/A";
+  
+  const genres = Array.isArray(show.genres) && show.genres.length > 0 ? show.genres.join(" ") : "no genres";
+  showCard.querySelector("[data-genres]").textContent = genres;
+  
+  showCard.querySelector("[data-status]").textContent = show.status || "Unknown";
+  showCard.querySelector("[data-runtime]").textContent = show.runtime ? `${show.runtime} mins`: "N/A";
 
   showCard.querySelector(".show-card").addEventListener("click", function () {
     state.selectedShowId = show.id;
@@ -74,9 +82,12 @@ function createShowCard(show) {
     state.searchTerm = "";
 
     fetchEpisodes(show.id);
+
   });
   return showCard;
 };
+
+
 
 function createEpisodeCard(episode) {
   const episodeCard = document // we created a const to clone the template from the html file
@@ -94,6 +105,9 @@ function createEpisodeCard(episode) {
   return episodeCard;
 };
 
+function isValidShow(show) {
+  return (show.name && show.id);
+}
 
 function renderShows() {
   const showsContainer = document.getElementById("shows-container");
@@ -106,9 +120,7 @@ function renderShows() {
     //rendering error message for the user
     showsContainer.textContent = `Error: ${state.showsError}`;
     return;
-  } else if (!state.selectedShowId === null) {
-    renderShows();
-  }
+  } 
 
   const filteredShows = state.shows.filter(function (show) {
     //we filter all the data making sure the input is a string and case insensitive
@@ -194,6 +206,22 @@ const fetchEpisodes = async (showId) => {
   }
 };
 
+backToShows.addEventListener("click", () => {
+  // 1. Reset the state so the logic knows we are back on the "Shows" view
+  state.selectedShowId = null;
+  state.episodes = [];
+  state.searchTerm = "";
+
+  // 2. Clear UI elements
+  input.value = "";
+  showDropdown.value = "";
+  clearEpisodeDropdown();
+
+  // 3. Trigger the render
+  renderShows();
+});
+
+
 input.addEventListener("input", function () {  //select the input tag and stores it in the variable input
   //fires every time the input changes (typing, pasting, deleting text)
   state.searchTerm = input.value.toLowerCase(); //stores the input value with case-insensitive in the state.searchTerm
@@ -211,6 +239,8 @@ function clearEpisodeDropdown() {
   const episodeDropdown = document.getElementById("episode-select");
   episodeDropdown.innerHTML = '<option value="">Select an episode</option>';
 };
+
+
 
 showDropdown.addEventListener("change", (event) => {
   const selectedId = event.target.value;
@@ -244,8 +274,16 @@ episodeDropdown.addEventListener("change", (event) => {
   }
 });
 
+
+
 fetchShows().then(function (shows) {
-  state.shows = shows;
+
+  const validShows = shows.filter(isValidShow);
+  console.log(`Total shows fetched: ${shows.length}`);
+  console.log(
+    `Shows removed due to invalid format: ${shows.length - validShows.length}`
+  );
+  state.shows = validShows;
   state.shows.sort((a, b) => a.name.localeCompare(b.name));
   populateShowDropdown(state.shows);
   renderShows();
